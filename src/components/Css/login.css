@@ -1,0 +1,179 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+.login-container {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding-left: 18%;
+  justify-content: flex-start;
+  background-image: url("../assets/bus.jpg"); 
+  background-size: cover;          
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.login-box {
+background: #fff;
+  background-color: transparent;
+  border-radius: 12px;                           
+  width: 380px;
+  padding: 28px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0,1);
+  text-align: center;    
+  transition: all 0.3s ease;
+}
+.logo {
+  font-size: 38px;
+  color: black;
+  margin-bottom: 8px;
+}
+h2 {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+p {
+  font-size: 14px;
+  color:#1c273c;
+  margin-bottom: 20px;
+}
+label {
+  display: block;
+  text-align: left;
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  padding: 10px 45px 10px 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+input:focus {
+  border-color:#1c273c;
+}
+.options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  margin-bottom: 15px;
+}
+
+.options a {
+  color: #1c273c;
+  text-decoration: none;
+}
+.btn {
+  background:#1c273c;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  width: 100%;
+  padding: 10px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn:hover {
+  background: #1c273c;
+}
+.divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0;
+  gap: 10px; 
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1; 
+  height: 1px;
+  background: #1c273c; 
+  box-shadow: #1c273c; 
+}
+
+.divider span {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1c273c;
+  padding: 0 8px;
+}
+
+.or{
+  color:#1c273c;
+}
+.social-login {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.social-login button {
+  flex: 1;
+  border-radius: 8px;
+  background: #1c273c;
+  color:white;
+  padding: 8px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.social-login button:hover {
+  background: #1c273c;
+}
+
+.signup {
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.signup a {
+  color: #1c273c;
+  text-decoration: none;
+  font-weight: 500;
+}
+@media (max-width: 480px) {
+  .login-box {
+    padding: 25px 20px;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+
+  input {
+    padding: 9px;
+  }
+
+  .btn {
+    font-size: 14px;
+    padding: 9px;
+  }
+
+  .social-login button {
+    font-size: 13px;
+  }
+}
