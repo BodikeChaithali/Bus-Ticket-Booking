@@ -1,7 +1,7 @@
 import React from "react";
 import { FaBus, FaHome, FaUser, FaSignInAlt, FaTicketAlt } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
-import "./sideBar.css";
+import "./css/sideBar.css";
 
 const SideBar = ({ isOpen, setIsOpen }) => {
   const navigate = useNavigate();
