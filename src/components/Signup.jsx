@@ -2,11 +2,15 @@ import React, { useState } from "react";
 import "./css/Signup.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
+import { useNavigate } from "react-router-dom";
 
 
 export default function SignUp() {
   const [showPwd, setShowPwd] = useState(false);
-
+  const navigate = useNavigate();
+  const handleNavigate = (path) => {
+    navigate(path);
+  };
   return (
     <div className="su-page">
       <h1 className="su-mainheading">Welcome to TripZy!</h1>
@@ -49,7 +53,7 @@ export default function SignUp() {
           </button>
 
           <div className="su-label su-login">
-            Have an account? <a href="#">Login</a>
+            Have an account? <a onClick={() => handleNavigate("/login")} >Login</a>
           </div>
         </form>
       </div>
