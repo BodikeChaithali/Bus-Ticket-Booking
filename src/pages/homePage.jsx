@@ -1,10 +1,15 @@
 import React, { useState } from "react";
 import SideBar from "../components/sideBar";
 import "./homePage.css";
+import { useNavigate } from "react-router-dom";
+
 
 const HomePage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-
+  const navigate = useNavigate();
+    const handleNavigate = (path) => {
+      navigate(path);
+    };
   return (
     <div className={`homepage ${sidebarOpen ? "sidebar-open" : "sidebar-closed"}`}>
       <SideBar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
@@ -16,7 +21,7 @@ const HomePage = () => {
 
         <h2>Welcome to Tripzy!</h2>
         </div>
-        <a href="/login" className="signin-link">
+        <a href="/login" className="signin-link" onClick={() => handleNavigate("/login")}> 
         Sign in for better experience
         </a>
         </header>
