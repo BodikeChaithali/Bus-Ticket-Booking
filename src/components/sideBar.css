@@ -101,3 +101,12 @@
   position: fixed;
   top: 2
 }
+/* Animate the entire page content when sidebar opens */
+.content-wrapper {
+  transition: transform 0.4s ease;
+  transform: translateX(0);
+}
+
+.content-wrapper.move-right {
+  transform: translateX(200px); /* ✅ Adjust the distance you like */
+}
