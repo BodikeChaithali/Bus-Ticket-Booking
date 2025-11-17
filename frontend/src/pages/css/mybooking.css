@@ -1,0 +1,81 @@
+.bookings-page {
+  padding: 40px;
+  font-family: "Poppins", sans-serif;
+  color: #002b5b;
+  background:linear-gradient(135deg, #e6f0ff 0%, skyblue 100%);
+  background-size: cover;
+  min-height: 100vh;
+  padding-left: 100px;
+}
+
+h2 {
+  text-align: center;
+  color: #002b5b;
+  margin-bottom: 25px;
+}
+
+.no-bookings {
+  text-align: center;
+  color: #555;
+  margin-top: 40px;
+  font-size: 16px;
+}
+
+.booking-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+.booking-item {
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  width: 50vw;
+  box-shadow: 0 5px 20px rgba(0, 85, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.booking-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 25px rgba(0, 85, 255, 0.2);
+}
+
+.bus-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #002b5b;
+  margin: 10px;
+}
+.booking-list p{
+  margin: 10px;
+}
+
+.bus-icon {
+  font-size: 22px;
+}
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #002b5b;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 8px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 4px 10px rgba(0, 85, 255, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 30px;
+}
+
+.back-btn:hover {
+  transform: translateX(-3px) scale(1.05);
+  background: #002b5b;
+}
+

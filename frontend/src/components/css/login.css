@@ -1,0 +1,218 @@
+/* Everything scoped under .login-container to avoid global leakage */
+.login-container {
+  font-family: "Poppins", sans-serif;
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding-left: 7%;
+  justify-content: flex-start;
+  background-image: url("/public/Background.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Login box */
+.login-container .login-box {
+  background-color: transparent;
+  border-radius: 12px;
+  width: 380px;
+  padding: 28px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 1);
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+/* Logo and headings (scoped) */
+.login-container .logo {
+  font-size: 38px;
+  color: black;
+  margin-bottom: 8px;
+}
+
+.login-container .login-title {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.login-container .login-sub {
+  font-size: 14px;
+  color: #1c273c;
+  margin-bottom: 20px;
+}
+
+/* Labels */
+.login-container .login-form .label-email,
+.login-container .login-form .label-password {
+  display: block;
+  text-align: left;
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+/* Inputs (scoped per-class) */
+.login-container .input-email,
+.login-container .input-password {
+  width: 100%;
+  padding: 10px 45px 10px 10px; /* keeps space for toggle */
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  outline: none;
+  transition: border-color 0.3s;
+  box-sizing: border-box;
+}
+
+.login-container .input-email:focus,
+.login-container .input-password:focus {
+  border-color: #1c273c;
+}
+
+/* Password wrapper */
+.login-container .password-field {
+  position: relative;
+  width: 100%;
+}
+
+/* extra right padding for password input (safe even if defined above) */
+.login-container .password-field .input-password {
+  padding-right: 60px;
+  margin-bottom: 0; /* keep spacing controlled by form inputs */
+}
+
+/* Toggle button */
+.login-container .toggle-click {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 13px;
+  color: #333;
+  cursor: pointer;
+  user-select: none;
+  border: none;
+  background: transparent;
+  padding: 6px;
+  line-height: 1;
+  border-radius: 6px;
+}
+
+/* Focus outline for keyboard users */
+.login-container .toggle-click:focus {
+  outline: 2px solid rgba(28, 39, 60, 0.15);
+}
+
+/* Hover */
+.login-container .toggle-click:hover {
+  opacity: 0.85;
+}
+
+/* Sign-in button (scoped) */
+.login-container .signin-btn {
+  background: #1c273c;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  width: 100%;
+  padding: 10px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.3s;
+  margin-top: 15px;
+}
+
+.login-container .signin-btn:hover {
+  background: #162135; /* subtle darken on hover */
+}
+
+/* Divider */
+.login-container .divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0;
+  gap: 10px;
+}
+
+.login-container .divider::before,
+.login-container .divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #1c273c;
+}
+
+.login-container .divider .or {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1c273c;
+  padding: 0 8px;
+}
+
+/* Social login */
+.login-container .social-login {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.login-container .social-login .google {
+  flex: 1;
+  border-radius: 8px;
+  background: #1c273c;
+  color: white;
+  padding: 8px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+  border: none;
+}
+
+.login-container .social-login .google:hover {
+  background: #162135;
+}
+
+/* Signup text */
+.login-container .signup {
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.login-container .signup .signup-link {
+  color: #1c273c;
+  text-decoration: none;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .login-container .login-box {
+    padding: 25px 20px;
+  }
+
+  .login-container .login-title {
+    font-size: 20px;
+  }
+
+  .login-container .input-email,
+  .login-container .input-password {
+    padding: 9px;
+  }
+
+  .login-container .signin-btn {
+    font-size: 14px;
+    padding: 9px;
+  }
+
+  .login-container .social-login .google {
+    font-size: 13px;
+  }
+}

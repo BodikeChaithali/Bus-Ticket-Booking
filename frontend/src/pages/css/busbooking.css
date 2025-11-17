@@ -1,0 +1,179 @@
+.booking-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #e6f0ff 0%, skyblue 100%);
+  font-family: "Poppins", sans-serif;
+  padding: 40px;
+}
+
+.booking-page .booking-card,
+.booking-page .ticket-card {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(15px);
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  padding: 35px 45px;
+  width: 450px;
+  max-width: 95%;
+  text-align: center;
+  color: #002b5b;
+}
+
+.booking-page .booking-card:hover,
+.booking-page .ticket-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 85, 255, 0.25);
+}
+
+.booking-page .booking-card h2 {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 14px;
+  color: #1c273c;
+}
+
+.booking-page .booking-card p {
+  margin: 8px 0;
+  font-size: 15px;
+  color: #333;
+}
+
+.booking-page .booking-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 25px;
+}
+
+.booking-page .booking-form label {
+  text-align: left;
+  font-weight: 600;
+  color: #1c273c;
+}
+
+.booking-page .booking-form input {
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid #cbd5e0;
+  font-size: 15px;
+}
+
+.booking-page .booking-form input:focus {
+  border-color: #1c273c;
+  box-shadow: 0 0 0 2px rgba(0, 85, 255, 0.2);
+}
+
+.booking-page .passenger-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 18px;
+  border-radius: 15px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.booking-page .passenger-fields h4 {
+  text-align: left;
+  font-weight: 600;
+  color: #1c273c;
+  margin-bottom: 4px;
+}
+
+.booking-page button {
+  border: none;
+  border-radius: 30px;
+  font-weight: 600;
+  padding: 14px;
+  cursor: pointer;
+  font-size: 15px;
+  transition: all 0.3s ease;
+}
+
+.booking-page button:hover {
+  transform: scale(1.05);
+}
+
+.booking-page button:not(.back-btn) {
+  background: #1c273c;
+  color: white;
+  box-shadow: 0 4px 15px rgba(0, 85, 255, 0.3);
+}
+
+.booking-page .back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #1c273c;
+  color: white;
+  border-radius: 25px;
+  padding: 8px 20px;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.booking-page .back-btn:hover {
+  transform: translateX(-3px) scale(1.05);
+}
+
+.booking-page .confirm-btn {
+  background: #1c273c;
+  color: white;
+  font-size: 16px;
+  padding: 14px 40px;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.booking-page .ticket-card {
+  max-width: 500px;
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  text-align: left;
+  box-shadow: 0 6px 18px rgba(0, 85, 255, 0.1);
+}
+
+.booking-page .ticket-card p {
+  margin: 8px 0;
+  font-size: 15px;
+  color: #333;
+}
+
+.booking-page .ticket-passengers ul {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 10px;
+}
+
+.booking-page .ticket-passengers li {
+  background: rgba(0, 85, 255, 0.05);
+  padding: 10px 12px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  font-size: 15px;
+}
+
+.booking-page .thank-you {
+  text-align: center;
+  font-weight: 600;
+  color: #008000;
+  margin-top: 18px;
+}
+
+@media (max-width: 600px) {
+  .booking-page .booking-card,
+  .booking-page .ticket-card {
+    width: 95%;
+    padding: 28px 22px;
+  }
+
+  .booking-page .passenger-fields {
+    gap: 16px;
+  }
+}
+.passenger-input-row input{
+    margin: 5px;
+}
