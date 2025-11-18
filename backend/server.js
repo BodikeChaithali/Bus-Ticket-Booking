@@ -1,4 +1,3 @@
-// server.js (Universal version — works on any computer)
 import fs from "fs";
 import path from "path";
 import express from "express";
@@ -10,178 +9,178 @@ dotenv.config();
 
 const PORT = process.env.PORT || 5000;
 const SQL_FILE = path.join(process.cwd(), "schema.sql");
+
+// DB connection config used for running the SQL file (no default database)
+const baseDbConfig = {
+  host: process.env.DB_HOST || "localhost",
+  user: process.env.DB_USER || "root",
+  password: process.env.DB_PASSWORD || "",
+  port: process.env.DB_PORT ? Number(process.env.DB_PORT) : 3306,
+  multipleStatements: true, // important to run whole .sql file
+};
+
+// The database name created by your schema.sql is `bus_booking` — we will use that for the pool
 const DB_NAME = process.env.DB_NAME || "bus_booking";
 
-// 1) ROOT credentials ONLY for setup
-const rootConfig = {
-  host: process.env.DB_HOST || "localhost",
-  user: process.env.DB_ROOT_USER || "root",
-  password: process.env.DB_ROOT_PASSWORD || "",
-  port: process.env.DB_PORT ? Number(process.env.DB_PORT) : 3306,
-  multipleStatements: true,
-};
+async function runSqlFileIfExists() {
+  if (!fs.existsSync(SQL_FILE)) {
+    console.log("schema.sql not found — skipping SQL initialization.");
+    return;
+  }
 
-// 2) Normal user (app uses this)
-const appDbConfig = {
-  host: process.env.DB_HOST || "localhost",
-  user: process.env.DB_USER || "tripzy_user",
-  password: process.env.DB_PASSWORD || "",
-  database: DB_NAME,
-  port: process.env.DB_PORT ? Number(process.env.DB_PORT) : 3306,
-};
+  console.log("Found schema.sql — executing...");
 
-// STEP A — Create DB + user if missing
-async function initializeDatabase() {
-  const conn = await mysql.createConnection({
-    ...rootConfig,
-    multipleStatements: true,
-  });
+  const sql = fs.readFileSync(SQL_FILE, "utf8");
 
+  // Create a connection (without database) so CREATE DATABASE will work
+  const conn = await mysql.createConnection(baseDbConfig);
   try {
-    console.log("🔧 Setting up database...");
-    await conn.query(`
-      CREATE DATABASE IF NOT EXISTS ${DB_NAME};
-      CREATE USER IF NOT EXISTS 'tripzy_user'@'localhost' IDENTIFIED BY 'TripZy@123';
-      GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO 'tripzy_user'@'localhost';
-      FLUSH PRIVILEGES;
-    `);
-    console.log("✅ Database + user ready.");
+    await conn.query(sql);
+    console.log("schema.sql executed successfully.");
+  } catch (err) {
+    console.error("Error running schema.sql:", err.message || err);
+    throw err;
   } finally {
     await conn.end();
   }
 }
 
-// STEP B — Run schema.sql
-async function runSchema() {
-  if (!fs.existsSync(SQL_FILE)) {
-    console.log("⚠️ schema.sql not found — skipping.");
-    return;
-  }
-
-  console.log("📄 Running schema.sql...");
-
-  const sql = fs.readFileSync(SQL_FILE, "utf8");
-
-  const conn = await mysql.createConnection({
-    ...rootConfig,
-    multipleStatements: true,
-  });
-
-  try {
-    await conn.query(sql);
-    console.log("schema.sql imported.");
-  } catch (err) {
-    console.error("Error in schema.sql:", err.message);
-    throw err;
-  } finally {
-    conn.end();
-  }
-}
-
 async function start() {
+  // 1) Run SQL file to create DB/tables/seed data (idempotent because your SQL uses IF NOT EXISTS)
   try {
-    await initializeDatabase();
-    await runSchema();
+    await runSqlFileIfExists();
   } catch (err) {
-    console.error(" Startup failed:", err.message);
+    console.error("Failed to initialize DB from schema.sql — aborting startup.");
     process.exit(1);
   }
 
+  // 2) Create pool pointing to the database created by schema.sql
   const pool = mysql.createPool({
-    ...appDbConfig,
+    ...baseDbConfig,
+    database: DB_NAME,
     waitForConnections: true,
     connectionLimit: 10,
   });
 
-  // quick test
-  await pool.query("SELECT 1");
+  // quick test connection
+  try {
+    const [rows] = await pool.query("SELECT 1 + 1 AS ok");
+    // eslint-disable-next-line no-console
+    console.log("Connected to MySQL and pool created (database:", DB_NAME + ")");
+  } catch (err) {
+    console.error("MySQL pool connection failed:", err.message || err);
+    process.exit(1);
+  }
 
-  console.log(" Connected to MySQL!");
-
+  // 3) Start Express
   const app = express();
   app.use(cors());
   app.use(express.json());
 
-
-  app.post("/api/signup", async (req, res) => {
-  const { name, email, password } = req.body;
-
-  if (!name || !email || !password)
-    return res.status(400).json({ error: "All fields required" });
-
-  try {
-    const [existing] = await pool.query("SELECT * FROM users WHERE email = ?", [email]);
-
-    if (existing.length > 0) {
-      return res.status(400).json({ error: "Email already registered" });
-    }
-
-    await pool.query(
-      "INSERT INTO users (name, email, password) VALUES (?, ?, ?)",
-      [name, email, password]
-    );
-
-    res.json({ success: true, message: "Signup successful" });
-  } catch (error) {
-    res.status(500).json({ error: "Server error" });
-  }
-});
-
-app.post("/api/login", async (req, res) => {
-  const { email, password } = req.body;
-
-  const [rows] = await pool.query("SELECT * FROM users WHERE email = ?", [email]);
-
-  if (rows.length === 0) {
-    return res.status(400).json({ error: "No account found. Please sign up." });
-  }
-
-  const user = rows[0];
-
-  if (user.password !== password) {
-    return res.status(400).json({ error: "Incorrect password" });
-  }
-
-  res.json({
-    success: true,
-    user: {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      age: user.age,
-    }
-  });
-});
-
-
-  // API: buses
+  // Fetch buses by route
+  // Example: GET /api/buses?from=Mumbai&to=Hyderabad&date=2025-11-20
   app.get("/api/buses", async (req, res) => {
     const { from, to, date } = req.query;
     if (!from || !to || !date)
-      return res.status(400).json({ error: "from, to, date are required" });
+      return res.status(400).json({ error: "from, to, and date are required" });
 
-    const dayOfWeek = new Date(date).toLocaleDateString("en-US", {
-      weekday: "long",
-    });
+    // compute weekday name (English)
+    let dayOfWeek;
+    try {
+      dayOfWeek = new Date(date).toLocaleDateString("en-US", { weekday: "long" });
+    } catch (err) {
+      return res.status(400).json({ error: "invalid date format" });
+    }
 
-    const sql = `
+    const query = `
       SELECT * FROM buses
-      WHERE LOWER(from_city)=LOWER(?)
-        AND LOWER(to_city)=LOWER(?)
+      WHERE LOWER(from_city) = LOWER(?)
+        AND LOWER(to_city) = LOWER(?)
         AND available_days LIKE CONCAT('%', ?, '%')
     `;
 
-    const [rows] = await pool.query(sql, [from, to, dayOfWeek]);
-    res.json(rows);
+    try {
+      const [results] = await pool.query(query, [from, to, dayOfWeek]);
+      res.json(results);
+    } catch (err) {
+      console.error("DB error /api/buses:", err.message || err);
+      res.status(500).json({ error: "DB error" });
+    }
+  });
+
+  // Get bus by ID
+  app.get("/api/buses/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+      const [rows] = await pool.query("SELECT * FROM buses WHERE id = ?", [id]);
+      if (!rows || rows.length === 0) return res.status(404).json({ error: "Bus not found" });
+      res.json(rows[0]);
+    } catch (err) {
+      console.error("DB error /api/buses/:id:", err.message || err);
+      res.status(500).json({ error: "DB error" });
+    }
+  });
+
+  // Book a ticket (simple demo: updates seats_left)
+  app.post("/api/book", async (req, res) => {
+    const { bus_id, name, passengers, total_price } = req.body;
+    if (!bus_id || !name || !passengers) {
+      return res.status(400).json({ error: "bus_id, name and passengers are required" });
+    }
+
+    const conn = await pool.getConnection();
+    try {
+      await conn.beginTransaction();
+
+      // check available seats
+      const [rows] = await conn.query("SELECT seats_left FROM buses WHERE id = ? FOR UPDATE", [bus_id]);
+      if (rows.length === 0) {
+        await conn.rollback();
+        return res.status(404).json({ error: "Bus not found" });
+      }
+
+      const seatsLeft = rows[0].seats_left;
+      if (seatsLeft < passengers) {
+        await conn.rollback();
+        return res.status(400).json({ error: "Not enough seats available" });
+      }
+
+      // reduce seats
+      await conn.query("UPDATE buses SET seats_left = seats_left - ? WHERE id = ?", [passengers, bus_id]);
+
+      // (Optional) you could insert into a bookings table here if you add one
+      // await conn.query("INSERT INTO bookings (bus_id, name, passengers, total_price) VALUES (?, ?, ?, ?)", [bus_id, name, passengers, total_price]);
+
+      await conn.commit();
+
+      res.json({
+        success: true,
+        message: "Booking successful",
+        name,
+        passengers,
+        total_price: typeof total_price === "number" ? total_price.toFixed(2) : total_price,
+      });
+    } catch (err) {
+      await conn.rollback();
+      console.error("DB error /api/book:", err.message || err);
+      res.status(500).json({ error: "DB error" });
+    } finally {
+      conn.release();
+    }
   });
 
   app.get("/", (req, res) => {
-    res.send("TripZy Backend Running Successfully!");
+    res.send("TripZy backend is running successfully!");
   });
 
-  app.listen(PORT, () =>
-    console.log(` Server running on http://localhost:${PORT}`)
-  );
+  app.listen(PORT, () => {
+    // eslint-disable-next-line no-console
+    console.log(`Server running on port ${PORT}`);
+    console.log(`Try: GET /api/buses?from=Mumbai&to=Hyderabad&date=2025-11-21`);
+  });
 }
 
-start();
+start().catch((err) => {
+  console.error("Fatal startup error:", err);
+  process.exit(1);
+});
