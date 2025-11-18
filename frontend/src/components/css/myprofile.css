@@ -85,12 +85,6 @@ body {
   margin-bottom: 15px;
 }
 
-.profile-age {
-  font-size: 18px;
-  color: var(--muted);
-  margin-bottom: 40px;
-}
-
 .bookings-btn {
   padding: 15px 45px;
   font-size: 18px;
@@ -107,3 +101,5 @@ body {
   background: var(--accent-dark);
   transform: translateY(-2px);
 }
+
+

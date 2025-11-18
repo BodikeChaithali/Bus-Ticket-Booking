@@ -2,11 +2,18 @@ import React, { useState } from "react";
 import "./css/login.css";
 import { FaGoogle, FaLocationDot } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { UserContext } from "../context/UserContext";
+import { useLocation } from "react-router-dom";
+
 
 export default function Login() {
+  const { setUser } = useContext(UserContext);
   const [showPwd, setShowPwd] = useState(false);
   const [form, setForm] = useState({ email: "", password: "" });
   const navigate = useNavigate();
+  const location = useLocation();
+{location.state?.message && <p className="alert">{location.state.message}</p>}
   const handleNavigate = (path) => {
     navigate(path);
   };
@@ -52,10 +59,32 @@ export default function Login() {
               {showPwd ? "Hide" : "Show"}
             </button>
           </div>
+          
+          <button
+  type="submit"
+  className="btn signin-btn"
+  onClick={async () => {
+    const res = await fetch("http://localhost:5000/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(form),
+    });
 
-          <button type="submit" className="btn signin-btn">
-            Sign In
-          </button>
+    const data = await res.json();
+
+    if (data.error) {
+      alert(data.error);
+      return;
+    }
+
+    setUser(data.user);
+    navigate("/profile");
+  }}
+>
+  Sign In
+</button>
+
+
 
           <div className="divider">
             <span className="or">OR</span>
