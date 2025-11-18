@@ -164,7 +164,3 @@ INSERT INTO buses (name, from_city, to_city, departure_time, arrival_time, durat
 ('VRL B103','Bangalore','Mumbai','09:30','21:30','12h',24,1249.00,4.4,'Monday,Friday,Sunday'),
 ('National B104','Bangalore','Mumbai','11:00','23:00','12h',20,1399.00,4.5,'Wednesday,Saturday'),
 ('KPN B105','Bangalore','Mumbai','13:00','01:00','12h',16,1349.00,4.1,'Tuesday,Thursday,Sunday');
-
--- 15) Pune -> Mumbai (already added above as 13) -- duplicate routes handled.
-
--- 16) (Any remaining combos if needed were covered)

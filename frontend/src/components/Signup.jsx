@@ -77,10 +77,8 @@ export default function SignUp() {
             Create account
           </button>
 
-          {/* ✅ Continue with Google text */}
           <div className="su-or-divider">OR</div>
 
-          {/* ✅ Google button */}
           <button type="button" className="su-google-btn">
             <FontAwesomeIcon icon={faGoogle} className="su-google-fa" />
               Continue with Google

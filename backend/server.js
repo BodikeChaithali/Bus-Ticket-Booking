@@ -69,9 +69,9 @@ async function runSchema() {
 
   try {
     await conn.query(sql);
-    console.log("✅ schema.sql imported.");
+    console.log("schema.sql imported.");
   } catch (err) {
-    console.error("❌ Error in schema.sql:", err.message);
+    console.error("Error in schema.sql:", err.message);
     throw err;
   } finally {
     conn.end();
@@ -83,7 +83,7 @@ async function start() {
     await initializeDatabase();
     await runSchema();
   } catch (err) {
-    console.error("❌ Startup failed:", err.message);
+    console.error(" Startup failed:", err.message);
     process.exit(1);
   }
 
@@ -96,7 +96,7 @@ async function start() {
   // quick test
   await pool.query("SELECT 1");
 
-  console.log("🚀 Connected to MySQL!");
+  console.log(" Connected to MySQL!");
 
   const app = express();
   app.use(cors());
@@ -180,7 +180,7 @@ app.post("/api/login", async (req, res) => {
   });
 
   app.listen(PORT, () =>
-    console.log(`🚀 Server running on http://localhost:${PORT}`)
+    console.log(` Server running on http://localhost:${PORT}`)
   );
 }
 
