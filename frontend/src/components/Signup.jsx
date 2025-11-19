@@ -3,14 +3,21 @@ import "./css/Signup.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { UserContext } from "../context/UserContext";
+
 
 
 export default function SignUp() {
+  const { setUser } = useContext(UserContext);
   const [showPwd, setShowPwd] = useState(false);
   const navigate = useNavigate();
-  const handleNavigate = (path) => {
-    navigate(path);
-  };
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: ""
+  });
+ 
   return (
     <div className="su-page">
       <h1 className="su-mainheading">Welcome to TripZy!</h1>
@@ -20,10 +27,21 @@ export default function SignUp() {
 
         <form className="su-form">
           <label className="su-label">Full name</label>
-          <input className="su-input" placeholder="Your full name" />
+           <input
+            className="su-input"
+            placeholder="Your full name"
+            value={form.name}
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
+          />
 
           <label className="su-label">Email</label>
-          <input className="su-input" type="email" placeholder="your@example.com" />
+          <input
+            className="su-input"
+            type="email"
+            placeholder="your@example.com"
+            value={form.email}
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
+          />
 
           <label className="su-label">Password</label>
           <div className="su-input-wrapper">
@@ -31,29 +49,44 @@ export default function SignUp() {
               type={showPwd ? "text" : "password"}
               placeholder="Create a password"
               className="su-input"
+              value={form.password}
+              onChange={(e) => setForm({ ...form, password: e.target.value })}
             />
             <button
               type="button"
               className="su-show"
-              onClick={() => setShowPwd((s) => !s)}
+               onClick={() => setShowPwd(!showPwd)}
             >
               {showPwd ? "Hide" : "Show"}
             </button>
           </div>
 
-          <button className="su-primary">Create account</button>
+          <button
+            className="su-primary"
+            type="button"
+            onClick={() => {
+              setUser({
+                name: form.name,
+                email: form.email,
+                age: 22,
+              });
+              navigate("/profile")
 
-          {/* ✅ Continue with Google text */}
+            }}
+          >
+            Create account
+          </button>
+
           <div className="su-or-divider">OR</div>
 
-          {/* ✅ Google button */}
           <button type="button" className="su-google-btn">
             <FontAwesomeIcon icon={faGoogle} className="su-google-fa" />
               Continue with Google
           </button>
 
           <div className="su-label su-login">
-            Have an account? <a onClick={() => handleNavigate("/login")} >Login</a>
+            Have an account? <a onClick={() => navigate("/login")}>Login</a>
+
           </div>
         </form>
       </div>

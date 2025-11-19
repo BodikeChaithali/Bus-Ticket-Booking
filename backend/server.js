@@ -1,4 +1,3 @@
-// server.js (ESM) — runs schema.sql first, then starts the API
 import fs from "fs";
 import path from "path";
 import express from "express";
@@ -37,9 +36,9 @@ async function runSqlFileIfExists() {
   const conn = await mysql.createConnection(baseDbConfig);
   try {
     await conn.query(sql);
-    console.log("✅ schema.sql executed successfully.");
+    console.log("schema.sql executed successfully.");
   } catch (err) {
-    console.error("❌ Error running schema.sql:", err.message || err);
+    console.error("Error running schema.sql:", err.message || err);
     throw err;
   } finally {
     await conn.end();
@@ -67,7 +66,7 @@ async function start() {
   try {
     const [rows] = await pool.query("SELECT 1 + 1 AS ok");
     // eslint-disable-next-line no-console
-    console.log("✅ Connected to MySQL and pool created (database:", DB_NAME + ")");
+    console.log("Connected to MySQL and pool created (database:", DB_NAME + ")");
   } catch (err) {
     console.error("MySQL pool connection failed:", err.message || err);
     process.exit(1);
@@ -171,12 +170,12 @@ async function start() {
   });
 
   app.get("/", (req, res) => {
-    res.send("✅ TripZy backend is running successfully!");
+    res.send("TripZy backend is running successfully!");
   });
 
   app.listen(PORT, () => {
     // eslint-disable-next-line no-console
-    console.log(`🚀 Server running on port ${PORT}`);
+    console.log(`Server running on port ${PORT}`);
     console.log(`Try: GET /api/buses?from=Mumbai&to=Hyderabad&date=2025-11-21`);
   });
 }
