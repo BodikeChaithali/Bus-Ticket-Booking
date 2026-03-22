@@ -4,8 +4,15 @@ import express from "express";
 import mysql from "mysql2/promise";
 import cors from "cors";
 import dotenv from "dotenv";
+import mongoose from "mongoose";
+import authRoutes from "./routes/auth.js";
+import authMiddleware from "./middleware/authMiddleware.js";
 
 dotenv.config();
+
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log("MongoDB Connected"))
+  .catch(err => console.log(err));
 
 const PORT = process.env.PORT || 5000;
 const SQL_FILE = path.join(process.cwd(), "schema.sql");
@@ -76,6 +83,8 @@ async function start() {
   const app = express();
   app.use(cors());
   app.use(express.json());
+  
+  app.use("/api", authRoutes);
 
   // Fetch buses by route
   // Example: GET /api/buses?from=Mumbai&to=Hyderabad&date=2025-11-20
@@ -122,7 +131,7 @@ async function start() {
   });
 
   // Book a ticket (simple demo: updates seats_left)
-  app.post("/api/book", async (req, res) => {
+  app.post("/api/book" , authMiddleware,async (req, res) => {
     const { bus_id, name, passengers, total_price } = req.body;
     if (!bus_id || !name || !passengers) {
       return res.status(400).json({ error: "bus_id, name and passengers are required" });
@@ -184,3 +193,4 @@ start().catch((err) => {
   console.error("Fatal startup error:", err);
   process.exit(1);
 });
+

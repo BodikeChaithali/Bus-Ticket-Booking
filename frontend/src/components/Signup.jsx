@@ -62,20 +62,37 @@ export default function SignUp() {
           </div>
 
           <button
-            className="su-primary"
-            type="button"
-            onClick={() => {
-              setUser({
-                name: form.name,
-                email: form.email,
-                age: 22,
-              });
-              navigate("/profile")
+  className="su-primary"
+  type="button"
+  onClick={async () => {
+    const res = await fetch("http://localhost:5000/api/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: form.email,
+        password: form.password,
+      }),
+    });
 
-            }}
-          >
-            Create account
-          </button>
+    const data = await res.json();
+
+    if (data.error) {
+      alert(data.error);
+      return;
+    }
+
+    alert("Account created successfully!");
+
+    // redirect to login page
+    navigate("/login", {
+      state: { message: "Signup successful, please login" },
+    });
+  }}
+>
+  Create account
+</button>
 
           <div className="su-or-divider">OR</div>
 

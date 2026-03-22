@@ -21,7 +21,7 @@ export default function Myprofile() {
 
       <div className="profile-container">
         <div className="profile-avatar">
-          {user.name.charAt(0).toUpperCase()}
+          {user?.email?.charAt(0).toUpperCase()}
         </div>
         <h2 className="profile-name">{user.name}</h2>
         <p className="profile-email">{user.email}</p>
