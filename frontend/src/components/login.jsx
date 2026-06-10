@@ -13,7 +13,7 @@ export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const navigate = useNavigate();
   const location = useLocation();
-{location.state?.message && <p className="alert">{location.state.message}</p>}
+
   const handleNavigate = (path) => {
     navigate(path);
   };
@@ -27,7 +27,7 @@ export default function Login() {
 
         <h2 className="login-title">Welcome Back</h2>
         <p className="login-sub">Sign in to book your next journey</p>
-
+        {location.state?.message && <p className="alert">{location.state.message}</p>}
         <form className="login-form" onSubmit={(e) => e.preventDefault()}>
           <label htmlFor="email" className="label-email">Email</label>
           <input
@@ -76,7 +76,7 @@ export default function Login() {
       alert(data.error);
       return;
     }
-
+    localStorage.setItem("token", data.token);
     setUser(data.user);
     navigate("/profile");
   }}
