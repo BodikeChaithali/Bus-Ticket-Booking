@@ -1,11 +1,13 @@
-import React from "react";
-import { FaBus, FaHome, FaUser, FaSignInAlt, FaTicketAlt } from "react-icons/fa";
+import { useContext } from "react";
+import { FaBus, FaHome, FaUser, FaSignInAlt, FaSignOutAlt, FaTicketAlt } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
 import "./css/sideBar.css";
 
 const SideBar = ({ isOpen, setIsOpen }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user, logout } = useContext(UserContext);
 
   const openMenu = () => setIsOpen(true);
   const closeMenu = () => setIsOpen(false);
@@ -13,6 +15,12 @@ const SideBar = ({ isOpen, setIsOpen }) => {
   const handleNavigate = (path) => {
     if (location.pathname !== path) navigate(path);
     closeMenu();
+  };
+
+  const handleLogout = async () => {
+    await logout();
+    closeMenu();
+    navigate("/");
   };
 
   return (
@@ -39,7 +47,11 @@ const SideBar = ({ isOpen, setIsOpen }) => {
           <li onClick={() => handleNavigate("/")}><FaHome /> Home</li>
           <li onClick={() => handleNavigate("/my-bookings")}><FaTicketAlt /> My Bookings</li>
           <li onClick={() => handleNavigate("/profile")}><FaUser /> My Profile</li>
-          <li onClick={() => handleNavigate("/signup")}><FaSignInAlt /> Login / Signup</li>
+          {user ? (
+            <li onClick={handleLogout}><FaSignOutAlt /> Logout</li>
+            ) : (
+            <li onClick={() => handleNavigate("/signup")}><FaSignInAlt /> Login / Signup</li>
+          )}
         </ul>
 
         <footer>© 2025 TripZy</footer>

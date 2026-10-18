@@ -1,11 +1,21 @@
 import { useContext } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 
 export default function ProtectedRoute({ children }) {
-  const { user } = useContext(UserContext);
+  const { user, loading } = useContext(UserContext);
+  const location = useLocation();
+
+  if (loading) return <p style={{ padding: 40 }}>Loading...</p>;
+
   if (!user) {
-  return <Navigate to="/signup" state={{ message: "Please signup to book tickets" }} replace />;
-}
+    return (
+      <Navigate
+        to="/login"
+        replace
+        state={{ message: "Please login to continue", from: location.pathname }}
+      />
+    );
+  }
   return children;
 }

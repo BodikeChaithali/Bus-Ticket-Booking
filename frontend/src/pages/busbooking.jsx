@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback , useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
+import { UserContext } from "../context/UserContext";
 import { apiFetch } from "../api";
 import "./css/busbooking.css";
 
@@ -9,6 +10,7 @@ const MAX_PASSENGERS = 6;
 const BusBooking = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { setUser } = useContext(UserContext);
 
   const [bus, setBus] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -82,10 +84,6 @@ const BusBooking = () => {
       setError("Age must be a whole number between 1 and 120.");
       return;
     }
-    if (!localStorage.getItem("token")) {
-      navigate("/login", { state: { message: "Please login to book tickets" } });
-      return;
-    }
 
     setSubmitting(true);
     try {
@@ -99,8 +97,7 @@ const BusBooking = () => {
       const data = await res.json();
 
       if (res.status === 401) {
-        localStorage.removeItem("token");
-        navigate("/login", { state: { message: "Session expired, please login again" } });
+        setUser(null); // session expired -> ProtectedRoute sends us to login
         return;
       }
       if (!res.ok) {

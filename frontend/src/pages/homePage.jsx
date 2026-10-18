@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import { useState, useContext } from "react";
 import "./css/homePage.css";
 import { useNavigate, useOutletContext } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
 
 const HomePage = () => {
   const [fromCity, setFromCity] = useState("");
@@ -8,6 +9,7 @@ const HomePage = () => {
   const [journeyDate, setJourneyDate] = useState("");
 
   const navigate = useNavigate();
+  const { user } = useContext(UserContext);
 
   // RECEIVE SIDEBAR STATE FROM LAYOUT
   const { isOpen } = useOutletContext();
@@ -46,11 +48,11 @@ const HomePage = () => {
       <div className="homepage-content">
         <header className="homepage-header">
           <div className="header-left">
-            <h2>Welcome to Tripzy!</h2>
+            <h2>{user ? `Welcome back, ${user.name}!` : "Welcome to Tripzy!"}</h2>
           </div>
 
           <a className="signin-link" onClick={() => handleNavigate("/login")}>
-            {isOpen ? "" : "Sign in for better experience"}
+            {isOpen || user ? "" : "Sign in for better experience"}
           </a>
         </header>
 

@@ -1,30 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaBus, FaCalendarAlt, FaArrowLeft } from "react-icons/fa";
+import { UserContext } from "../context/UserContext";
 import { apiFetch } from "../api";
 import "./css/mybooking.css";
 
 const MyBookings = () => {
+  const { setUser } = useContext(UserContext);
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [needsLogin, setNeedsLogin] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     let cancelled = false;
 
     async function load() {
-      if (!localStorage.getItem("token")) {
-        setNeedsLogin(true);
-        setLoading(false);
-        return;
-      }
       try {
         const res = await apiFetch("/api/bookings");
         if (res.status === 401) {
-          localStorage.removeItem("token");
-          if (!cancelled) setNeedsLogin(true);
+          setUser(null); // session expired -> ProtectedRoute sends us to login
           return;
         }
         const data = await res.json();
@@ -41,17 +36,11 @@ const MyBookings = () => {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [setUser]);
 
   let content;
   if (loading) {
     content = <p className="no-bookings">Loading your bookings...</p>;
-  } else if (needsLogin) {
-    content = (
-      <p className="no-bookings">
-        Please <a onClick={() => navigate("/login")} style={{ cursor: "pointer", textDecoration: "underline" }}>login</a> to see your bookings.
-      </p>
-    );
   } else if (error) {
     content = <p className="no-bookings">{error}</p>;
   } else if (bookings.length === 0) {

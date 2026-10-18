@@ -11,24 +11,22 @@ import MyBookings from "./pages/mybooking";
 import { UserProvider } from "./context/UserContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 
-
-
 function App() {
   return (
-     <UserProvider>
-    <Router>
-      <Routes>
-        <Route element={<Layout />}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/profile" element={<Myprofile />} />
-          <Route path="/bus-results" element={<BusResults />} />
-          <Route path="/bus/:id" element={<ProtectedRoute> <BusBooking /> </ProtectedRoute>} />
-          <Route path="/my-bookings" element={<MyBookings />} />
-        </Route>
-      </Routes>
-    </Router>
+    <UserProvider>
+      <Router>
+        <Routes>
+          <Route element={<Layout />}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/bus-results" element={<BusResults />} />
+            <Route path="/profile" element={<ProtectedRoute><Myprofile /></ProtectedRoute>} />
+            <Route path="/bus/:id" element={<ProtectedRoute><BusBooking /></ProtectedRoute>} />
+            <Route path="/my-bookings" element={<ProtectedRoute><MyBookings /></ProtectedRoute>} />
+          </Route>
+        </Routes>
+      </Router>
     </UserProvider>
   );
 }

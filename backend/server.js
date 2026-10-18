@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import pool from "./db.js";
 import authRoutes from "./routes/auth.js";
 import authMiddleware from "./middleware/authMiddleware.js";
@@ -34,11 +35,15 @@ function weekdayOf(dateStr) {
 }
 
 const app = express();
+
+app.set("trust proxy", 1);
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(",") : "*",
-  }),
+    origin: (process.env.CORS_ORIGIN || "http://localhost:3000").split(","),
+    credentials: true, 
+  })
 );
+app.use(cookieParser());
 app.use(express.json());
 
 app.use("/api", authRoutes);
