@@ -1,28 +1,39 @@
-import mysql from "mysql2";
+import fs from "fs";
+import mysql from "mysql2/promise";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-console.log("🔍 ENV values read:", {
-  DB_HOST: process.env.DB_HOST,
-  DB_USER: process.env.DB_USER,
-  DB_PASSWORD: process.env.DB_PASSWORD ? " Loaded" : " Missing",
-  DB_NAME: process.env.DB_NAME
-});
+const required = ["DB_HOST", "DB_USER", "DB_PASSWORD", "DB_NAME", "JWT_SECRET"];
+const missing = required.filter((k) => process.env[k] === undefined);
+if (missing.length) {
+  console.error(`Missing required env vars: ${missing.join(", ")}`);
+  process.exit(1);
+}
 
-const db = mysql.createConnection({
+function buildSsl() {
+  if (process.env.DB_SSL !== "true") return undefined;
+  if (process.env.DB_CA) return { ca: process.env.DB_CA.replace(/\\n/g, "\n") };
+  if (process.env.DB_CA_PATH)
+    return { ca: fs.readFileSync(process.env.DB_CA_PATH) };
+  return { rejectUnauthorized: true };
+}
+
+export const dbConfig = {
   host: process.env.DB_HOST,
+  port: Number(process.env.DB_PORT || 3306),
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME
+  database: process.env.DB_NAME,
+  ssl: buildSsl(),
+  dateStrings: true, // DATE/TIMESTAMP come back as plain strings, no timezone shifts
+  timezone: "Z",
+};
+
+const pool = mysql.createPool({
+  ...dbConfig,
+  waitForConnections: true,
+  connectionLimit: 10,
 });
 
-db.connect((err) => {
-  if (err) {
-    console.error(" MySQL connection error:", err);
-  } else {
-    console.log(" Connected to MySQL Database!");
-  }
-});
-
-export default db;
+export default pool;
