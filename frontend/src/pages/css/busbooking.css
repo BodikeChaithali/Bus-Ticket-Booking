@@ -177,3 +177,23 @@
 .passenger-input-row input{
     margin: 5px;
 }
+
+.booking-page .booking-form select {
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid #cbd5e0;
+  font-size: 15px;
+}
+
+.booking-page .booking-card .form-error {
+  color: #c0392b;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.booking-page button:disabled,
+.booking-page button:disabled:hover {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
