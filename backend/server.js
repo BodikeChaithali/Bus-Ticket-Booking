@@ -8,6 +8,32 @@ import authMiddleware from "./middleware/authMiddleware.js";
 const PORT = process.env.PORT || 5000;
 const MAX_PASSENGERS_PER_BOOKING = 6;
 
+const APP_TIMEZONE = process.env.APP_TIMEZONE || "Asia/Kolkata";
+
+// Current date (YYYY-MM-DD) and time (HH:MM) in the app's timezone (India by default),
+// so "today" and "already departed" don't depend on where the server runs.
+function nowInAppZone() {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: APP_TIMEZONE,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).formatToParts(new Date());
+  const get = (type) => parts.find((p) => p.type === type).value;
+  return {
+    date: `${get("year")}-${get("month")}-${get("day")}`,
+    time: `${get("hour")}:${get("minute")}`,
+  };
+}
+
+function hasDeparted(travelDate, departureTime) {
+  const now = nowInAppZone();
+  return travelDate < now.date || (travelDate === now.date && departureTime.slice(0, 5) <= now.time);
+}
+
 class HttpError extends Error {
   constructor(status, message) {
     super(message);
@@ -48,6 +74,19 @@ app.use(express.json());
 
 app.use("/api", authRoutes);
 
+// Distinct from/to pairs, so the UI only offers routes that really exist
+app.get("/api/routes", async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      "SELECT DISTINCT from_city, to_city FROM buses ORDER BY from_city, to_city"
+    );
+    res.json(rows);
+  } catch (err) {
+    console.error("GET /api/routes:", err.message);
+    res.status(500).json({ error: "DB error" });
+  }
+});
+
 // GET /api/buses?from=Mumbai&to=Hyderabad&date=2026-11-20
 app.get("/api/buses", async (req, res) => {
   const { from, to, date } = req.query;
@@ -57,7 +96,8 @@ app.get("/api/buses", async (req, res) => {
   const weekday = weekdayOf(String(date));
   if (!weekday)
     return res.status(400).json({ error: "date must be a valid YYYY-MM-DD" });
-
+    const now = nowInAppZone();
+  if (date < now.date) return res.status(400).json({ error: "Date cannot be in the past" });
   try {
     // Create the trips for this date on first search (safe to repeat: unique key + IGNORE)
     await pool.query(
@@ -69,9 +109,10 @@ app.get("/api/buses", async (req, res) => {
 
     const [rows] = await pool.query(
       `${TRIP_SELECT}
-       WHERE b.from_city = ? AND b.to_city = ? AND t.travel_date = ?
-       ORDER BY b.departure_time`,
-      [from, to, date],
+        WHERE b.from_city = ? AND b.to_city = ? AND t.travel_date = ?
+          AND (t.travel_date > ? OR b.departure_time > ?)
+        ORDER BY b.departure_time`,
+      [from, to, date, now.date, now.time]
     );
     res.json(rows);
   } catch (err) {
@@ -90,7 +131,8 @@ app.get("/api/buses/:id", async (req, res) => {
     const [rows] = await pool.query(`${TRIP_SELECT} WHERE t.id = ?`, [id]);
     if (rows.length === 0)
       return res.status(404).json({ error: "Bus not found" });
-    res.json(rows[0]);
+    const trip = rows[0];
+    res.json({ ...trip, departed: hasDeparted(trip.travel_date, trip.departure_time) });
   } catch (err) {
     console.error("GET /api/buses/:id:", err.message);
     res.status(500).json({ error: "DB error" });
@@ -142,7 +184,7 @@ app.post("/api/book", authMiddleware, async (req, res) => {
 
     // lock the trip row so two people can't take the last seat at the same time
     const [rows] = await conn.query(
-      `SELECT t.id, t.seats_left, b.price
+       `SELECT t.id, t.seats_left, t.travel_date, b.departure_time, b.price
        FROM trips t JOIN buses b ON b.id = t.bus_id
        WHERE t.id = ? FOR UPDATE`,
       [tripId],
@@ -150,6 +192,9 @@ app.post("/api/book", authMiddleware, async (req, res) => {
     if (rows.length === 0) throw new HttpError(404, "Trip not found");
 
     const trip = rows[0];
+    if (hasDeparted(trip.travel_date, trip.departure_time)) {
+      throw new HttpError(409, "This bus has already departed");
+    }
     const count = passengers.length;
     if (trip.seats_left < count) {
       throw new HttpError(409, `Only ${trip.seats_left} seat(s) left`);
@@ -238,6 +283,13 @@ app.use((err, req, res, next) => {
     .status(err.status || 500)
     .json({ error: err.status ? err.message : "Server error" });
 });
+
+try {
+  nowInAppZone(); // throws if APP_TIMEZONE is not a valid timezone
+} catch {
+  console.error(`Invalid APP_TIMEZONE: "${APP_TIMEZONE}"`);
+  process.exit(1);
+}
 
 try {
   await pool.query("SELECT 1");

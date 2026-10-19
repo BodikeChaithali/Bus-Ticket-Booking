@@ -156,3 +156,9 @@
 .back-btn:hover .back-icon {
   transform: translateX(-4px);
 }
+
+.book-btn:disabled,
+.book-btn:disabled:hover {
+  background: #8a94a6;
+  cursor: not-allowed;
+}

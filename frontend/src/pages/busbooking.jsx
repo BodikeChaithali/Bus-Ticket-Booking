@@ -139,7 +139,9 @@ const BusBooking = () => {
           <p>Fare per Passenger: ₹{bus.price}</p>
           <h3 className="total-fare">💰 Total Fare: ₹{totalFare}</h3>
 
-          {bus.seats_left === 0 ? (
+          {bus.departed ? (
+            <p className="form-error">This bus has already departed.</p>
+          ) : bus.seats_left === 0 ? (
             <p className="form-error">Sorry, this bus is sold out.</p>
           ) : (
             <div className="booking-form">
