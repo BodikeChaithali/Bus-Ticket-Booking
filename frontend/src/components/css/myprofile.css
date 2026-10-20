@@ -11,7 +11,7 @@ body {
   background: var(--bg);
   margin: 0;
   padding: 0;
-  background: url("/public/Background.jpg") no-repeat center center/cover;
+  background: url("../../assets/background.jpg") no-repeat center center/cover;
   background-attachment: fixed;
 }
 
@@ -36,18 +36,6 @@ body {
   justify-content: flex-start;
   min-height: 150vh;
   padding: 80px 0 0 250px;
-}
-
-.left-title h1 {
-  font-size: 42px;
-  color: var(--text);
-  font-weight: 700;
-  line-height: 1.2;
-  margin-bottom: 80px;
-}
-
-.left-title .brand {
-  color: var(--accent);
 }
 
 .profile-container {
@@ -101,5 +89,3 @@ body {
   background: var(--accent-dark);
   transform: translateY(-2px);
 }
-
-

@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: left;
   background: rgb(231, 231, 231);
-  background-image: url("/public/Background.jpg");
+  background-image: url("../../assets/background.jpg");
   background-size: cover;
   padding: 2vw;
   padding-left: 90px; /* adds spacing for small screens */
@@ -169,41 +169,4 @@
   .su-login {
     font-size: 13px;
   }
-}
-.su-or-divider {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  font-weight: 600;
-  margin: 5px 0;
-  text-transform: uppercase;
-}
-
-.su-or-divider::before,
-.su-or-divider::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: black;
-  margin: 0 10px;
-  opacity: 0.5;
-}
-
-
-.su-google-btn {
-  background: #1c273c; /* same as create account */
-  color: white;
-  border: none;
-  padding: 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 15px;
-  font-weight: bold;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  margin-bottom: 10px;
 }

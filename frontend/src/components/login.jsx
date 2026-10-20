@@ -1,7 +1,7 @@
-import React, { useState, useContext } from "react";
+import { useState, useContext } from "react";
 import "./css/login.css";
-import { FaGoogle, FaLocationDot } from "react-icons/fa6";
-import { useNavigate, useLocation } from "react-router-dom";
+import { FaLocationDot } from "react-icons/fa6";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 import { apiFetch } from "../api";
 
@@ -85,21 +85,11 @@ export default function Login() {
             {submitting ? "Signing in..." : "Sign In"}
           </button>
 
-          <div className="divider">
-            <span className="or">OR</span>
-          </div>
-
-          <div className="social-login">
-            <button type="button" className="google">
-              <FaGoogle /> Continue with Google
-            </button>
-          </div>
-
           <p className="signup">
             Don’t have an account?{" "}
-            <a className="signup-link" onClick={() => navigate("/signup")}>
+            <Link className="signup-link" to="/signup">
               Sign up now
-            </a>
+            </Link>
           </p>
         </form>
       </div>

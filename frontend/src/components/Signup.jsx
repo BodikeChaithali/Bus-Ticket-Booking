@@ -1,8 +1,6 @@
-import React, { useState, useContext } from "react";
+import { useState, useContext } from "react";
 import "./css/Signup.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGoogle } from "@fortawesome/free-brands-svg-icons";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 import { apiFetch } from "../api";
 
@@ -93,15 +91,8 @@ export default function SignUp() {
             {submitting ? "Creating account..." : "Create account"}
           </button>
 
-          <div className="su-or-divider">OR</div>
-
-          <button type="button" className="su-google-btn">
-            <FontAwesomeIcon icon={faGoogle} className="su-google-fa" />
-            Continue with Google
-          </button>
-
           <div className="su-label su-login">
-            Have an account? <a onClick={() => navigate("/login")}>Login</a>
+            Have an account? <Link to="/login">Login</Link>
           </div>
         </form>
       </div>

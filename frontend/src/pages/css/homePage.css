@@ -2,7 +2,7 @@
   display: flex;
   min-height: 100vh;
   font-family: "Poppins", sans-serif;
-  background-image: url("/public/Background.jpg"); /* ✅ fixed path */
+  background-image: url("../../assets/background.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -14,18 +14,6 @@
   padding-top:41px;
   transition: margin 0.4s ease, transform 0.4s ease;
 }
-
-.sidebar-open .homepage-content {
-  margin-left: 16vw;
-  transform: scale(1);
-}
-
-/* When sidebar is closed */
-.sidebar-closed .homepage-content {
-  margin-left: 0;
-  transform: translateX(0) scale(1.05);
-}
-
 
 .homepage-header {
   display: flex;
@@ -154,7 +142,4 @@
   }
 }
 
-.routes-error {
-  color: #c0392b;
-  font-weight: 600;
-}
+.routes-error { color: #c0392b; font-weight: 600; }

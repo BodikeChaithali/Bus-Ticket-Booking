@@ -31,10 +31,7 @@ const SideBar = ({ isOpen, setIsOpen }) => {
         </button>
       )}
 
-      <div
-        className={`sidebar ${isOpen ? "open" : "collapsed"}`}
-        onClick={(e) => e.stopPropagation()}
-      >
+      <div className={`sidebar ${isOpen ? "open" : "collapsed"}`}>
         <div className="sidebar-header">
           <div className="brand">
             <FaBus className="bus-icon" />
@@ -49,12 +46,12 @@ const SideBar = ({ isOpen, setIsOpen }) => {
           <li onClick={() => handleNavigate("/profile")}><FaUser /> My Profile</li>
           {user ? (
             <li onClick={handleLogout}><FaSignOutAlt /> Logout</li>
-            ) : (
+          ) : (
             <li onClick={() => handleNavigate("/signup")}><FaSignInAlt /> Login / Signup</li>
           )}
         </ul>
 
-        <footer>© 2025 TripZy</footer>
+        <footer>© {new Date().getFullYear()} TripZy</footer>
       </div>
     </>
   );

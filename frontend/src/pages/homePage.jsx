@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import "./css/homePage.css";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { Link, useNavigate, useOutletContext } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 import { apiFetch } from "../api";
 
@@ -69,10 +69,6 @@ const HomePage = () => {
     navigate(`/bus-results?${query}`);
   };
 
-  const handleNavigate = (path) => {
-    navigate(path);
-  };
-
   return (
     <div className="homepage">
       <div className="homepage-content">
@@ -81,9 +77,11 @@ const HomePage = () => {
             <h2>{user ? `Welcome back, ${user.name}!` : "Welcome to Tripzy!"}</h2>
           </div>
 
-          <a className="signin-link" onClick={() => handleNavigate("/login")}>
-            {isOpen || user ? "" : "Sign in for better experience"}
-          </a>
+          {!isOpen && !user && (
+            <Link className="signin-link" to="/login">
+              Sign in for better experience
+            </Link>
+          )}
         </header>
 
         {/* Book Your Journey Section */}

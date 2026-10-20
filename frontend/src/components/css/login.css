@@ -8,7 +8,7 @@
   align-items: center;
   padding-left: 7%;
   justify-content: flex-start;
-  background-image: url("/public/Background.jpg");
+  background-image: url("../../assets/background.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -128,57 +128,6 @@
   background: #162135; /* subtle darken on hover */
 }
 
-/* Divider */
-.login-container .divider {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 20px 0;
-  gap: 10px;
-}
-
-.login-container .divider::before,
-.login-container .divider::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: #1c273c;
-}
-
-.login-container .divider .or {
-  font-size: 14px;
-  font-weight: 500;
-  color: #1c273c;
-  padding: 0 8px;
-}
-
-/* Social login */
-.login-container .social-login {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.login-container .social-login .google {
-  flex: 1;
-  border-radius: 8px;
-  background: #1c273c;
-  color: white;
-  padding: 8px;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  cursor: pointer;
-  transition: background 0.3s;
-  border: none;
-}
-
-.login-container .social-login .google:hover {
-  background: #162135;
-}
-
 /* Signup text */
 .login-container .signup {
   margin-top: 15px;
@@ -210,9 +159,5 @@
   .login-container .signin-btn {
     font-size: 14px;
     padding: 9px;
-  }
-
-  .login-container .social-login .google {
-    font-size: 13px;
   }
 }
