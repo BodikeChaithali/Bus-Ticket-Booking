@@ -18,9 +18,9 @@ const SideBar = ({ isOpen, setIsOpen }) => {
   };
 
   const handleLogout = async () => {
-    await logout();
     closeMenu();
-    navigate("/");
+    navigate("/"); // leave protected pages first, otherwise ProtectedRoute redirects to /login
+    await logout();
   };
 
   return (

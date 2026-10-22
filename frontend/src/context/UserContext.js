@@ -5,14 +5,14 @@ export const UserContext = createContext();
 
 export function UserProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); 
-  
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     let cancelled = false;
     apiFetch("/api/me")
       .then((res) => res.json())
       .then((data) => {
-        if (!cancelled) setUser(data.user ?? null);
+        if (!cancelled) setUser((current) => current ?? data.user ?? null);
       })
       .catch(() => {})
       .finally(() => {
